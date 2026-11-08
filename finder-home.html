@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Hostels – RoomiQ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background: var(--bg-light);">
+
+<!-- ===== NAVBAR ===== -->
+<nav class="dash-navbar">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a href="index.html" class="rq-logo">Roomi<span>Q</span></a>
+        <div class="d-flex align-items-center gap-3">
+            <span style="font-size: 0.82rem; background: var(--primary-light); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                <i class="bi bi-search me-1"></i> Finder
+            </span>
+            <div class="d-flex align-items-center gap-2">
+                <div class="user-avatar" style="background: var(--accent);">SA</div>
+                <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-dark);">Sara Ahmed</span>
+            </div>
+            <a href="login.html" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;">
+                <i class="bi bi-box-arrow-right me-1"></i> Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="padding-top: 32px; padding-bottom: 60px;">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+        <h1 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 4px;">Find a Hostel</h1>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">Showing 12 hostels near Lahore</p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- ===== FILTER SIDEBAR ===== -->
+        <div class="col-lg-3">
+            <div class="filter-bar">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 16px;">
+                    <i class="bi bi-sliders me-2"></i>Filters
+                </div>
+
+                <!-- Area -->
+                <div class="mb-4">
+                    <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Area</div>
+                    <div class="d-flex flex-column gap-2">
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" checked style="accent-color: var(--primary);"> All Areas
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" style="accent-color: var(--primary);"> Gulberg
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" style="accent-color: var(--primary);"> Model Town
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" style="accent-color: var(--primary);"> Johar Town
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" style="accent-color: var(--primary);"> Garden Town
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" style="accent-color: var(--primary);"> Faisal Town
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Budget -->
+                <div class="mb-4">
+                    <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Monthly Budget</div>
+                    <div class="d-flex flex-column gap-2">
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="radio" name="budget" checked style="accent-color: var(--primary);"> Any Price
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="radio" name="budget" style="accent-color: var(--primary);"> Under Rs. 5,000
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="radio" name="budget" style="accent-color: var(--primary);"> Rs. 5,000 – 8,000
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="radio" name="budget" style="accent-color: var(--primary);"> Rs. 8,000 – 12,000
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="radio" name="budget" style="accent-color: var(--primary);"> Rs. 12,000+
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Gender -->
+                <div class="mb-4">
+                    <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Gender</div>
+                    <div class="d-flex flex-column gap-2">
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="radio" name="gender" checked style="accent-color: var(--primary);"> Any
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="radio" name="gender" style="accent-color: var(--primary);"> Boys Only
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="radio" name="gender" style="accent-color: var(--primary);"> Girls Only
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Facilities -->
+                <div class="mb-4">
+                    <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Facilities</div>
+                    <div class="d-flex flex-column gap-2">
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" style="accent-color: var(--primary);"> WiFi
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" style="accent-color: var(--primary);"> Meals
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" style="accent-color: var(--primary);"> AC
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer;">
+                            <input type="checkbox" style="accent-color: var(--primary);"> Laundry
+                        </label>
+                    </div>
+                </div>
+
+                <button class="btn-primary-rq w-100 text-center">Apply Filters</button>
+            </div>
+        </div>
+
+        <!-- ===== LISTINGS GRID ===== -->
+        <div class="col-lg-9">
+
+            <!-- Sort bar -->
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span style="font-size: 0.88rem; color: var(--text-muted);">12 hostels found</span>
+                <div class="d-flex align-items-center gap-2">
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Sort by:</span>
+                    <select style="border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 0.85rem; color: var(--text-dark); outline: none;">
+                        <option>Latest</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class="row g-3">
+
+                <!-- Listing 1 -->
+                <div class="col-md-4">
+                    <a href="#" class="listing-card" onclick="showDetail(event)">
+                        <div class="listing-card-img">🏠</div>
+                        <div class="listing-card-body">
+                            <div class="listing-area"><i class="bi bi-geo-alt-fill me-1"></i>Gulberg III</div>
+                            <div class="listing-title">Al-Noor Boys Hostel</div>
+                            <div class="listing-price">Rs. 7,500 <span>/ month</span></div>
+                            <div class="d-flex flex-wrap gap-1 align-items-center">
+                                <span class="facility-tag">WiFi</span>
+                                <span class="facility-tag">Meals</span>
+                                <span class="gender-badge gender-boys">Boys</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Listing 2 -->
+                <div class="col-md-4">
+                    <a href="#" class="listing-card" onclick="showDetail(event)">
+                        <div class="listing-card-img">🏢</div>
+                        <div class="listing-card-body">
+                            <div class="listing-area"><i class="bi bi-geo-alt-fill me-1"></i>Model Town</div>
+                            <div class="listing-title">Fatima Girls Hostel</div>
+                            <div class="listing-price">Rs. 9,000 <span>/ month</span></div>
+                            <div class="d-flex flex-wrap gap-1 align-items-center">
+                                <span class="facility-tag">AC</span>
+                                <span class="facility-tag">WiFi</span>
+                                <span class="gender-badge gender-girls">Girls</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Listing 3 -->
+                <div class="col-md-4">
+                    <a href="#" class="listing-card" onclick="showDetail(event)">
+                        <div class="listing-card-img">🏘️</div>
+                        <div class="listing-card-body">
+                            <div class="listing-area"><i class="bi bi-geo-alt-fill me-1"></i>Johar Town</div>
+                            <div class="listing-title">Student Lodge Johar</div>
+                            <div class="listing-price">Rs. 6,000 <span>/ month</span></div>
+                            <div class="d-flex flex-wrap gap-1 align-items-center">
+                                <span class="facility-tag">WiFi</span>
+                                <span class="facility-tag">Meals</span>
+                                <span class="gender-badge gender-any">Any</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Listing 4 -->
+                <div class="col-md-4">
+                    <a href="#" class="listing-card" onclick="showDetail(event)">
+                        <div class="listing-card-img">🏗️</div>
+                        <div class="listing-card-body">
+                            <div class="listing-area"><i class="bi bi-geo-alt-fill me-1"></i>Garden Town</div>
+                            <div class="listing-title">Garden View Rooms</div>
+                            <div class="listing-price">Rs. 8,000 <span>/ month</span></div>
+                            <div class="d-flex flex-wrap gap-1 align-items-center">
+                                <span class="facility-tag">AC</span>
+                                <span class="facility-tag">WiFi</span>
+                                <span class="gender-badge gender-boys">Boys</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Listing 5 -->
+                <div class="col-md-4">
+                    <a href="#" class="listing-card" onclick="showDetail(event)">
+                        <div class="listing-card-img">🏬</div>
+                        <div class="listing-card-body">
+                            <div class="listing-area"><i class="bi bi-geo-alt-fill me-1"></i>Faisal Town</div>
+                            <div class="listing-title">Noor-ul-Huda Hostel</div>
+                            <div class="listing-price">Rs. 5,500 <span>/ month</span></div>
+                            <div class="d-flex flex-wrap gap-1 align-items-center">
+                                <span class="facility-tag">Meals</span>
+                                <span class="facility-tag">Laundry</span>
+                                <span class="gender-badge gender-any">Any</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Listing 6 -->
+                <div class="col-md-4">
+                    <a href="#" class="listing-card" onclick="showDetail(event)">
+                        <div class="listing-card-img">🏠</div>
+                        <div class="listing-card-body">
+                            <div class="listing-area"><i class="bi bi-geo-alt-fill me-1"></i>Gulberg II</div>
+                            <div class="listing-title">Pearl Boys Residence</div>
+                            <div class="listing-price">Rs. 11,000 <span>/ month</span></div>
+                            <div class="d-flex flex-wrap gap-1 align-items-center">
+                                <span class="facility-tag">AC</span>
+                                <span class="facility-tag">WiFi</span>
+                                <span class="facility-tag">Meals</span>
+                                <span class="gender-badge gender-boys">Boys</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- ===== ROOMMATE BOARD ===== -->
+            <div style="margin-top: 40px;">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div>
+                        <h2 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 2px;">Roommate Board</h2>
+                        <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">Students looking for a room to share</p>
+                    </div>
+                    <button class="btn-accent-rq" style="font-size: 0.82rem; padding: 8px 16px;" onclick="showRoommateModal()">
+                        <i class="bi bi-plus me-1"></i>Post Yours
+                    </button>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="roommate-card">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <div class="user-avatar" style="background: #8B5CF6; width: 32px; height: 32px; font-size: 0.75rem;">AH</div>
+                                <span style="font-weight: 700; font-size: 0.9rem;">Ali Hassan</span>
+                                <span class="gender-badge gender-boys" style="margin-left: auto;">Male</span>
+                            </div>
+                            <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5;">
+                                PUCIT student, looking for roommate in <strong>Gulberg or Model Town</strong>. Budget Rs. 5,000–7,000.
+                            </div>
+                            <div class="d-flex gap-2">
+                                <span class="facility-tag">Gulberg</span>
+                                <span class="facility-tag">Model Town</span>
+                                <span class="facility-tag">Rs. 7k max</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="roommate-card">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <div class="user-avatar" style="background: #EC4899; width: 32px; height: 32px; font-size: 0.75rem;">FN</div>
+                                <span style="font-weight: 700; font-size: 0.9rem;">Fatima Noor</span>
+                                <span class="gender-badge gender-girls" style="margin-left: auto;">Female</span>
+                            </div>
+                            <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5;">
+                                1st year student, needs girls-only hostel in <strong>Johar Town</strong>. Budget under Rs. 8,000.
+                            </div>
+                            <div class="d-flex gap-2">
+                                <span class="facility-tag">Johar Town</span>
+                                <span class="facility-tag">Rs. 8k max</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="roommate-card">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <div class="user-avatar" style="background: var(--accent); width: 32px; height: 32px; font-size: 0.75rem;">UR</div>
+                                <span style="font-weight: 700; font-size: 0.9rem;">Usman Raza</span>
+                                <span class="gender-badge gender-boys" style="margin-left: auto;">Male</span>
+                            </div>
+                            <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5;">
+                                Final year, looking for roommate anywhere near <strong>PUCIT</strong>. Budget flexible up to Rs. 10,000.
+                            </div>
+                            <div class="d-flex gap-2">
+                                <span class="facility-tag">Near PUCIT</span>
+                                <span class="facility-tag">Rs. 10k max</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Hostel Detail Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius: 16px; border: none;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border); padding: 20px 24px;">
+                <h5 class="modal-title" style="font-weight: 700;">Al-Noor Boys Hostel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div class="listing-card-img mb-3" style="height: 200px; border-radius: 12px;">🏠</div>
+                <div class="d-flex align-items-center gap-3 flex-wrap mb-3">
+                    <div style="font-size: 1.4rem; font-weight: 800; color: var(--accent);">Rs. 7,500<span style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted);">/month</span></div>
+                    <span class="gender-badge gender-boys">Boys Only</span>
+                    <span style="font-size: 0.88rem; color: var(--text-muted);"><i class="bi bi-geo-alt me-1"></i>Gulberg III, Lahore</span>
+                </div>
+                <div class="mb-3">
+                    <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 8px;">Facilities</div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="facility-tag"><i class="bi bi-wifi me-1"></i>WiFi</span>
+                        <span class="facility-tag">3 Meals/day</span>
+                        <span class="facility-tag">Laundry</span>
+                        <span class="facility-tag">24/7 Security</span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">Description</div>
+                    <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">Well-maintained boys hostel located in the heart of Gulberg. 5 minutes drive from PUCIT. Clean rooms, home-cooked meals, and reliable WiFi. Rooms available on sharing basis (2–3 persons).</p>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid var(--border); padding: 16px 24px;">
+                <button type="button" class="btn-outline-rq" data-bs-dismiss="modal">Close</button>
+                <a href="https://wa.me/923001234567?text=Hi! I found your hostel on RoomiQ and I'm interested." target="_blank" class="btn-accent-rq ms-2">
+                    <i class="bi bi-whatsapp me-2"></i>Contact on WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Post Roommate Modal -->
+<div class="modal fade" id="roommateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 16px; border: none;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border); padding: 20px 24px;">
+                <h5 class="modal-title" style="font-weight: 700;">Post Roommate Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div class="mb-3">
+                    <label class="form-label-rq">Preferred Area</label>
+                    <input type="text" class="form-control-rq" placeholder="e.g. Gulberg, Johar Town...">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label-rq">Max Budget (PKR/month)</label>
+                    <input type="number" class="form-control-rq" placeholder="e.g. 8000">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label-rq">Gender</label>
+                    <select class="form-control-rq">
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label-rq">Short Description</label>
+                    <textarea class="form-control-rq" rows="3" placeholder="Briefly describe what you're looking for..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid var(--border); padding: 16px 24px;">
+                <button type="button" class="btn-outline-rq" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn-primary-rq ms-2">Post Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showDetail(e) {
+        e.preventDefault();
+        new bootstrap.Modal(document.getElementById('detailModal')).show();
+    }
+
+    function showRoommateModal() {
+        new bootstrap.Modal(document.getElementById('roommateModal')).show();
+    }
+</script>
+</body>
+</html>
