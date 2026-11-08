@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard – RoomiQ Lister</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page">
+
+<!-- ===== NAVBAR ===== -->
+<nav class="dash-navbar">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a href="index.html" class="rq-logo">Roomi<span>Q</span></a>
+
+        <div class="d-flex align-items-center gap-3">
+            <span style="font-size: 0.82rem; background: var(--accent-light); color: #065F46; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                <i class="bi bi-house-fill me-1"></i> Lister
+            </span>
+            <div class="d-flex align-items-center gap-2">
+                <div class="user-avatar">AK</div>
+                <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-dark);">Ahmed Khan</span>
+            </div>
+            <a href="login.html" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: none;">
+                <i class="bi bi-box-arrow-right me-1"></i> Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- ===== DASHBOARD CONTENT ===== -->
+<div class="dash-content">
+    <div class="container">
+
+        <!-- Welcome Bar -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h1 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 4px;">My Dashboard</h1>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">Manage your hostel listings here</p>
+            </div>
+            <button class="btn-primary-rq" onclick="showAddModal()">
+                <i class="bi bi-plus-circle me-2"></i>Add New Listing
+            </button>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background: var(--primary-light);">🏠</div>
+                    <div>
+                        <div class="stat-card-num">3</div>
+                        <div class="stat-card-label">Total Listings</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background: var(--accent-light);">✅</div>
+                    <div>
+                        <div class="stat-card-num">2</div>
+                        <div class="stat-card-label">Active Listings</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-card-icon" style="background: #FEF3C7;">👁️</div>
+                    <div>
+                        <div class="stat-card-num">148</div>
+                        <div class="stat-card-label">Total Views</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Listings Section -->
+        <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;">My Listings</div>
+        <div class="d-flex flex-column gap-3">
+
+            <!-- Listing Card 1 -->
+            <div class="lister-listing-card">
+                <div class="lister-listing-img">🏠</div>
+                <div class="lister-listing-body">
+                    <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+                        <div>
+                            <div style="font-weight: 700; font-size: 1rem; margin-bottom: 4px;">Al-Noor Boys Hostel</div>
+                            <div style="font-size: 0.82rem; color: var(--text-muted);">
+                                <i class="bi bi-geo-alt me-1"></i>Gulberg III, Lahore
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="status-badge status-active">Active</span>
+                            <span class="gender-badge gender-boys">Boys</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mt-2 flex-wrap">
+                        <span style="font-weight: 700; color: var(--accent); font-size: 0.95rem;">Rs. 7,500/month</span>
+                        <span class="facility-tag">WiFi</span>
+                        <span class="facility-tag">Meals</span>
+                        <span class="facility-tag">Laundry</span>
+                    </div>
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn-outline-rq" style="padding: 6px 16px; font-size: 0.82rem;">
+                            <i class="bi bi-pencil me-1"></i>Edit
+                        </button>
+                        <button style="background: #FEF2F2; color: #DC2626; border: none; padding: 6px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer;">
+                            <i class="bi bi-trash me-1"></i>Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing Card 2 -->
+            <div class="lister-listing-card">
+                <div class="lister-listing-img">🏢</div>
+                <div class="lister-listing-body">
+                    <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+                        <div>
+                            <div style="font-weight: 700; font-size: 1rem; margin-bottom: 4px;">Blue Sky Rooms – Johar</div>
+                            <div style="font-size: 0.82rem; color: var(--text-muted);">
+                                <i class="bi bi-geo-alt me-1"></i>Johar Town, Lahore
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="status-badge status-active">Active</span>
+                            <span class="gender-badge gender-any">Any</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mt-2 flex-wrap">
+                        <span style="font-weight: 700; color: var(--accent); font-size: 0.95rem;">Rs. 6,000/month</span>
+                        <span class="facility-tag">WiFi</span>
+                        <span class="facility-tag">Meals</span>
+                    </div>
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn-outline-rq" style="padding: 6px 16px; font-size: 0.82rem;">
+                            <i class="bi bi-pencil me-1"></i>Edit
+                        </button>
+                        <button style="background: #FEF2F2; color: #DC2626; border: none; padding: 6px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer;">
+                            <i class="bi bi-trash me-1"></i>Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing Card 3 (Inactive) -->
+            <div class="lister-listing-card" style="opacity: 0.7;">
+                <div class="lister-listing-img">🏘️</div>
+                <div class="lister-listing-body">
+                    <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+                        <div>
+                            <div style="font-weight: 700; font-size: 1rem; margin-bottom: 4px;">Garden View Single Room</div>
+                            <div style="font-size: 0.82rem; color: var(--text-muted);">
+                                <i class="bi bi-geo-alt me-1"></i>Garden Town, Lahore
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="status-badge status-inactive">Inactive</span>
+                            <span class="gender-badge gender-boys">Boys</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mt-2 flex-wrap">
+                        <span style="font-weight: 700; color: var(--accent); font-size: 0.95rem;">Rs. 8,000/month</span>
+                        <span class="facility-tag">AC</span>
+                        <span class="facility-tag">WiFi</span>
+                    </div>
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn-outline-rq" style="padding: 6px 16px; font-size: 0.82rem;">
+                            <i class="bi bi-pencil me-1"></i>Edit
+                        </button>
+                        <button style="background: var(--accent-light); color: #065F46; border: none; padding: 6px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer;">
+                            <i class="bi bi-check-circle me-1"></i>Activate
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div style="margin-top: 40px;">
+            <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;">My Profile</div>
+            <div style="background: var(--white); border-radius: 14px; padding: 24px; border: 1px solid var(--border);">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label-rq">Full Name</label>
+                        <input type="text" class="form-control-rq" value="Ahmed Khan">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-rq">Phone (WhatsApp)</label>
+                        <input type="text" class="form-control-rq" value="+92 300 1234567">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-rq">Email</label>
+                        <input type="email" class="form-control-rq" value="ahmed.khan@gmail.com">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-rq">City</label>
+                        <input type="text" class="form-control-rq" value="Lahore">
+                    </div>
+                    <div class="col-12">
+                        <button class="btn-primary-rq">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Add Listing Modal -->
+<div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius: 16px; border: none;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border); padding: 20px 24px;">
+                <h5 class="modal-title" style="font-weight: 700;">Add New Listing</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label-rq">Hostel / Room Name</label>
+                        <input type="text" class="form-control-rq" placeholder="e.g. Sunrise Boys Hostel">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-rq">Area</label>
+                        <select class="form-control-rq">
+                            <option>Select Area</option>
+                            <option>Gulberg, Lahore</option>
+                            <option>Model Town, Lahore</option>
+                            <option>Johar Town, Lahore</option>
+                            <option>Garden Town, Lahore</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-rq">Monthly Rent (PKR)</label>
+                        <input type="number" class="form-control-rq" placeholder="e.g. 7500">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-rq">Gender Preference</label>
+                        <select class="form-control-rq">
+                            <option>Boys Only</option>
+                            <option>Girls Only</option>
+                            <option>Any Gender</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label-rq">Facilities (tick all that apply)</label>
+                        <div class="d-flex flex-wrap gap-3 mt-1">
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.88rem; cursor: pointer;">
+                                <input type="checkbox" style="accent-color: var(--primary);"> WiFi
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.88rem; cursor: pointer;">
+                                <input type="checkbox" style="accent-color: var(--primary);"> Meals (3x/day)
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.88rem; cursor: pointer;">
+                                <input type="checkbox" style="accent-color: var(--primary);"> AC
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.88rem; cursor: pointer;">
+                                <input type="checkbox" style="accent-color: var(--primary);"> Laundry
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.88rem; cursor: pointer;">
+                                <input type="checkbox" style="accent-color: var(--primary);"> 24/7 Security
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label-rq">Description</label>
+                        <textarea class="form-control-rq" rows="3" placeholder="Describe your hostel, location details, nearby landmarks..."></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label-rq">Upload Photos</label>
+                        <input type="file" class="form-control-rq" multiple accept="image/*" style="padding: 10px;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid var(--border); padding: 16px 24px;">
+                <button type="button" class="btn-outline-rq" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn-primary-rq ms-2">Post Listing</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showAddModal() {
+        new bootstrap.Modal(document.getElementById('addModal')).show();
+    }
+</script>
+</body>
+</html>
