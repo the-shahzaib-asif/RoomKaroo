@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-main: #fbfbfd;
+    --bg-subtle: #f5f5f7;
+    --surface: #ffffff;
+    --text-main: #1d1d1f;
+    --text-muted: #6e6e73;
+    --border: #e5e5ea;
+    --whatsapp: #15803d;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+.riq-nav {
+    background: rgba(251, 251, 253, 0.88);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.85rem 0;
+}
+
+.riq-logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.03em;
+    color: var(--text-main);
+    text-decoration: none;
+}
+
+.riq-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+}
+
+    .riq-link:hover {
+        color: var(--text-main);
+        background: var(--bg-subtle);
+    }
+
+.riq-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem;
+}
+
+.riq-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.riq-card-img {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border);
+}
+
+.riq-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.58rem 0.8rem;
+    font-size: 0.9rem;
+    background: var(--surface);
+}
+
+.riq-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+    display: block;
+}
+
+.riq-tag {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.22rem 0.6rem;
+    border-radius: 6px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+}
+
+.btn-dark-riq {
+    background: var(--text-main);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+    .btn-dark-riq:hover {
+        background: #000;
+        color: #fff;
+    }
+
+.btn-outline-riq {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.58rem 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .btn-outline-riq:hover {
+        background: var(--bg-subtle);
+        color: var(--text-main);
+    }
+
+.btn-wa-riq {
+    background: var(--whatsapp);
+    color: #fff;
+    border-radius: 10px;
+    padding: 0.55rem 1rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .btn-wa-riq:hover {
+        background: #166534;
+        color: #fff;
+    }

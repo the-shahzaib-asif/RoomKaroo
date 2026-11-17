@@ -1,0 +1,50 @@
+﻿@model List<RoomIQ.Models.Hostel>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container mt-5">
+    <!-- Hero Section -->
+    <div class="riq-box p-5 mb-5 text-center">
+        <span class="riq-tag mb-3 d-inline-block">Verified Student Housing in Lahore</span>
+        <h1 class="fw-bold mb-3" style="font-size: 2.6rem; letter-spacing: -0.03em;">
+            Find your next hostel room without middlemen.
+        </h1>
+        <p class="text-secondary mx-auto mb-4" style="max-width: 580px; font-size: 1.05rem;">
+            Filter hostels by area, rent, and gender. Connect directly with hostel owners on WhatsApp in one click.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-controller="Home" asp-action="FinderHome" class="btn-dark-riq px-4 py-2">Browse Hostels (Finder)</a>
+            <a asp-controller="Home" asp-action="ListerDashboard" class="btn-outline-riq px-4 py-2">List Your Hostel (Owner)</a>
+        </div>
+    </div>
+
+    <!-- Dynamic Featured Hostels -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">Featured Hostels</h4>
+        <a asp-controller="Home" asp-action="FinderHome" class="small text-decoration-none">View all listings →</a>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var h in Model)
+        {
+            <div class="col-md-4">
+                <div class="riq-card">
+                    <img src="@h.ImageUrl" alt="@h.Name" class="riq-card-img" />
+                    <div class="p-3 d-flex flex-column flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="small text-secondary">@h.Area</span>
+                            <span class="riq-tag">@h.Gender</span>
+                        </div>
+                        <h5 class="fw-semibold mb-2">@h.Name</h5>
+                        <p class="small text-secondary mb-3">@h.Facilities</p>
+                        <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">Rs. @h.Price.ToString("N0")/mo</span>
+                            <a asp-controller="Home" asp-action="FinderHome" class="btn-outline-riq py-1 px-3 small">Explore</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

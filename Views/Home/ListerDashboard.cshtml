@@ -1,0 +1,98 @@
+﻿@model List<RoomIQ.Models.Hostel>
+@{
+    ViewData["Title"] = "Lister Dashboard";
+}
+
+<div class="container mt-5">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">Lister Dashboard — Hostel Owner Panel</h2>
+        <p class="text-secondary small mb-0">Add a new hostel listing or manage your existing properties below.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Column: Add Hostel Form -->
+        <div class="col-lg-4">
+            <div class="riq-box">
+                <h5 class="fw-bold mb-3">Add New Hostel</h5>
+                <form method="post" asp-controller="Home" asp-action="AddHostel">
+                    <div class="mb-3">
+                        <label class="riq-label">Hostel Name</label>
+                        <input name="Name" class="riq-input" placeholder="e.g. City Boys Hostel" required />
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="riq-label">Area</label>
+                            <select name="Area" class="riq-input">
+                                <option value="Johar Town">Johar Town</option>
+                                <option value="Model Town">Model Town</option>
+                                <option value="Anarkali">Anarkali</option>
+                                <option value="Gulberg">Gulberg</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="riq-label">Gender</label>
+                            <select name="Gender" class="riq-input">
+                                <option value="Boys">Boys</option>
+                                <option value="Girls">Girls</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="riq-label">Monthly Rent (PKR)</label>
+                        <input name="Price" type="number" class="riq-input" placeholder="18000" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="riq-label">Facilities</label>
+                        <input name="Facilities" class="riq-input" placeholder="WiFi, Mess, AC, Laundry" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="riq-label">Owner Name</label>
+                        <input name="OwnerName" class="riq-input" placeholder="Your Full Name" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="riq-label">WhatsApp Number (92...)</label>
+                        <input name="WhatsApp" class="riq-input" placeholder="923001234567" required />
+                    </div>
+                    <button type="submit" class="btn-dark-riq w-100">Publish Listing</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column: Dynamic Listings Table -->
+        <div class="col-lg-8">
+            <div class="riq-box p-0 overflow-hidden">
+                <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">Active Listings (@Model.Count)</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table mb-0 align-middle">
+                        <thead class="small text-secondary bg-light">
+                            <tr>
+                                <th class="ps-3">Hostel Name</th>
+                                <th>Area</th>
+                                <th>Gender</th>
+                                <th>Rent</th>
+                                <th>WhatsApp</th>
+                                <th class="text-end pe-3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-3 fw-medium">@item.Name</td>
+                                    <td>@item.Area</td>
+                                    <td><span class="riq-tag">@item.Gender</span></td>
+                                    <td>Rs. @item.Price.ToString("N0")</td>
+                                    <td class="small text-secondary">+@item.WhatsApp</td>
+                                    <td class="text-end pe-3">
+                                        <form method="post" asp-controller="Home" asp-action="DeleteHostel" asp-route-id="@item.Id" class="d-inline">
+                                            <button type="submit" class="btn-outline-riq py-1 px-2 small text-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>

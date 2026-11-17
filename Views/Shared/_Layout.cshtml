@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RoomKaroo</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    @{
+        var user = Context.Request.Cookies["UserEmail"];
+        var role = Context.Request.Cookies["UserRole"];
+    }
+    <header class="riq-nav sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <a class="riq-logo" asp-controller="Home" asp-action="Index">RoomKaroo</a>
+                <nav class="d-none d-md-flex gap-1">
+                    <a class="riq-link" asp-controller="Home" asp-action="Index">Home</a>
+                    <a class="riq-link" asp-controller="Home" asp-action="FinderHome">Finder Home</a>
+                    <a class="riq-link" asp-controller="Home" asp-action="ListerDashboard">Lister Dashboard</a>
+                </nav>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                @if (!string.IsNullOrEmpty(user))
+                {
+                    <span class="small text-secondary me-2">@user (@role)</span>
+                    <a class="btn-outline-riq py-1 px-3" asp-controller="Account" asp-action="Logout">Logout</a>
+                }
+                else
+                {
+                    <a class="riq-link" asp-controller="Account" asp-action="Login">Login</a>
+                    <a class="btn-dark-riq py-1 px-3" asp-controller="Account" asp-action="Signup">Sign Up</a>
+                }
+            </div>
+        </div>
+    </header>
+
+    <main class="pb-5">
+        @RenderBody()
+    </main>
+
+    <footer class="border-top py-4 mt-5 bg-white">
+        <div class="container d-flex justify-content-between small text-secondary">
+            <span><strong>RoomKaroo</strong> — Student Housing Directory (Deliverable 2 MVC)</span>
+            <span>Lahore, Pakistan</span>
+        </div>
+    </footer>
+</body>
+</html>
