@@ -1,70 +1,77 @@
 ﻿@model List<RoomIQ.Models.Hostel>
 @{
     ViewData["Title"] = "Finder Home";
-    var areas = new[] { "All", "Johar Town", "Model Town", "Anarkali", "Gulberg" };
+    var savedIds = ViewBag.SavedIds as List<int> ?? new List<int>();
 }
 
 <div class="container mt-5">
     <div class="mb-4">
-        <h2 class="fw-bold mb-1">Finder Home — Search Hostels</h2>
-        <p class="text-secondary small mb-0">Filter by area, gender, and monthly budget, then message the owner on WhatsApp.</p>
+        <h2 class="fw-bold mb-1">Explore Hostels</h2>
+        <p class="text-secondary small mb-0">Instant AJAX filtering — no page reload required.</p>
     </div>
 
-    <!-- Dynamic Filter Bar -->
-    <form method="get" asp-controller="Home" asp-action="FinderHome" class="riq-box mb-4">
+    <!-- Live AJAX Filter Bar -->
+    <div class="riq-box mb-4">
         <div class="row g-3 align-items-end">
             <div class="col-md-4">
                 <label class="riq-label">Area</label>
-                <select name="area" class="riq-input">
-                    @foreach (var a in areas)
-                    {
-                        <option value="@a" selected="@(ViewBag.SelectedArea == a)">@a</option>
-                    }
+                <select id="filterArea" class="riq-input">
+                    <option value="All">All Areas</option>
+                    <option value="Johar Town">Johar Town</option>
+                    <option value="Model Town">Model Town</option>
+                    <option value="Anarkali">Anarkali</option>
+                    <option value="Gulberg">Gulberg</option>
                 </select>
             </div>
             <div class="col-md-3">
                 <label class="riq-label">Gender</label>
-                <select name="gender" class="riq-input">
-                    <option value="All" selected="@(ViewBag.SelectedGender == "All")">All</option>
-                    <option value="Boys" selected="@(ViewBag.SelectedGender == "Boys")">Boys</option>
-                    <option value="Girls" selected="@(ViewBag.SelectedGender == "Girls")">Girls</option>
+                <select id="filterGender" class="riq-input">
+                    <option value="All">All</option>
+                    <option value="Boys">Boys</option>
+                    <option value="Girls">Girls</option>
                 </select>
             </div>
             <div class="col-md-3">
                 <label class="riq-label">Max Price (PKR)</label>
-                <input type="number" name="maxPrice" value="@ViewBag.MaxPrice" placeholder="e.g. 20000" class="riq-input" />
+                <input type="number" id="filterPrice" placeholder="e.g. 20000" class="riq-input" />
             </div>
-            <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn-dark-riq w-100">Search</button>
+            <div class="col-md-2">
+                <button type="button" id="btnFilter" class="btn-dark-riq w-100">Filter</button>
             </div>
         </div>
-    </form>
+    </div>
 
-    <!-- Dynamic Hostel Cards -->
-    <div class="row g-4">
+    <!-- Hostel Cards Container -->
+    <div id="hostelGrid" class="row g-4">
         @foreach (var item in Model)
         {
-            var waLink = $"https://wa.me/{item.WhatsApp}?text=Assalam-o-Alaikum, I saw your listing '{item.Name}' on RoomIQ.";
+            bool isSaved = savedIds.Contains(item.Id);
+            var waLink = $"https://wa.me/{item.WhatsApp}?text=Assalam-o-Alaikum, I saw '{item.Name}' on RoomKaroo.";
             <div class="col-md-4">
                 <div class="riq-card">
                     <img src="@item.ImageUrl" alt="@item.Name" class="riq-card-img" />
                     <div class="p-3 d-flex flex-column flex-grow-1">
-                        <div class="d-flex justify-content-between mb-1">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
                             <span class="small text-secondary fw-medium">@item.Area, Lahore</span>
-                            <span class="riq-tag">@item.Gender</span>
+                            <div class="d-flex gap-1">
+                                <span class="riq-tag">@item.Gender</span>
+                                <button type="button" class="btn-outline-riq py-0 px-2 small btn-save" data-id="@item.Id">
+                                    @(isSaved ? "Saved" : "Save")
+                                </button>
+                            </div>
                         </div>
                         <h5 class="fw-bold mb-2">@item.Name</h5>
                         <p class="small text-secondary mb-2"><strong>Facilities:</strong> @item.Facilities</p>
                         <p class="small text-secondary mb-3"><strong>Owner:</strong> @item.OwnerName</p>
 
-                        <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="fw-bold">Rs. @item.Price.ToString("N0")</span>
-                                <span class="text-secondary small">/mo</span>
+                        <div class="mt-auto pt-3 border-top">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold">Rs. @item.Price.ToString("N0")<span class="text-secondary small fw-normal">/mo</span></span>
+                                <button type="button" class="btn-outline-riq py-1 px-2 small btn-inquire" data-id="@item.Id" data-name="@item.Name">
+                                    Quick Inquiry
+                                </button>
                             </div>
-                            <a href="@waLink" target="_blank" class="btn-wa-riq">
-                                Contact on WhatsApp
-                            </a>
+                            <a href="@waLink" target="_blank" class="btn-wa-riq w-100 text-center">Contact on WhatsApp</a>
                         </div>
                     </div>
                 </div>
@@ -72,3 +79,118 @@
         }
     </div>
 </div>
+
+<!-- Quick Inquiry Modal -->
+<div class="modal fade" id="inquiryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3" style="border-radius: 14px;">
+            <div class="modal-header border-0 pb-1">
+                <h5 class="modal-title fw-bold" id="inqTitle">Send Inquiry</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="inqHostelId" />
+                <div class="mb-3">
+                    <label class="riq-label">Your Name</label>
+                    <input id="inqName" class="riq-input" placeholder="Shahzaib Asif" />
+                </div>
+                <div class="mb-3">
+                    <label class="riq-label">Phone / WhatsApp</label>
+                    <input id="inqPhone" class="riq-input" placeholder="03001234567" />
+                </div>
+                <div class="mb-3">
+                    <label class="riq-label">Message</label>
+                    <textarea id="inqMsg" rows="2" class="riq-input" placeholder="Is a 2-seater room available?"></textarea>
+                </div>
+                <button type="button" id="btnSendInquiry" class="btn-dark-riq w-100">Submit Inquiry</button>
+                <div id="inqStatus" class="small mt-2 text-center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // 1. $.get() — Live Filter Hostels
+        $("#btnFilter").click(function () {
+            var area = $("#filterArea").val();
+            var gender = $("#filterGender").val();
+            var maxPrice = $("#filterPrice").val();
+
+            $.get("/Home/FilterHostelsAjax", { area: area, gender: gender, maxPrice: maxPrice }, function (data) {
+                var html = "";
+                if (data.length === 0) {
+                    html = '<div class="col-12"><div class="riq-box text-center text-secondary">No hostels match your filter.</div></div>';
+                } else {
+                    data.forEach(function (item) {
+                        var waLink = "https://wa.me/" + item.whatsApp + "?text=Assalam-o-Alaikum, I saw " + encodeURIComponent(item.name) + " on RoomKaroo.";
+                        html += `
+                        <div class="col-md-4">
+                            <div class="riq-card">
+                                <img src="${item.imageUrl}" class="riq-card-img" />
+                                <div class="p-3 d-flex flex-column flex-grow-1">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="small text-secondary">${item.area}, Lahore</span>
+                                        <span class="riq-tag">${item.gender}</span>
+                                    </div>
+                                    <h5 class="fw-bold mb-2">${item.name}</h5>
+                                    <p class="small text-secondary mb-2"><strong>Facilities:</strong> ${item.facilities}</p>
+                                    <div class="mt-auto pt-3 border-top">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="fw-bold">Rs. ${item.price.toLocaleString()}/mo</span>
+                                            <button type="button" class="btn-outline-riq py-1 px-2 small btn-inquire" data-id="${item.id}" data-name="${item.name}">Quick Inquiry</button>
+                                        </div>
+                                        <a href="${waLink}" target="_blank" class="btn-wa-riq w-100 text-center">Contact on WhatsApp</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+                }
+                $("#hostelGrid").html(html);
+            });
+        });
+
+        // 2. $.post() — Save / Unsave Bookmark
+        $(document).on("click", ".btn-save", function () {
+            var btn = $(this);
+            var id = btn.data("id");
+
+            $.post("/Home/ToggleSaveAjax", { hostelId: id }, function (res) {
+                btn.text(res.saved ? "Saved" : "Save");
+            });
+        });
+
+        // Open Inquiry Modal
+        $(document).on("click", ".btn-inquire", function () {
+            $("#inqHostelId").val($(this).data("id"));
+            $("#inqTitle").text("Inquire: " + $(this).data("name"));
+            $("#inqStatus").text("");
+            new bootstrap.Modal(document.getElementById("inquiryModal")).show();
+        });
+
+        // 3. $.ajax() — Send Inquiry JSON to Server
+        $("#btnSendInquiry").click(function () {
+            var payload = {
+                hostelId: parseInt($("#inqHostelId").val()),
+                studentName: $("#inqName").val(),
+                phone: $("#inqPhone").val(),
+                message: $("#inqMsg").val()
+            };
+
+            $.ajax({
+                url: "/Home/SendInquiryAjax",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(payload),
+                success: function (res) {
+                    $("#inqStatus").removeClass("text-danger").addClass("text-success").text(res.message);
+                    $("#inqName, #inqPhone, #inqMsg").val("");
+                },
+                error: function () {
+                    $("#inqStatus").removeClass("text-success").addClass("text-danger").text("Please fill name and phone.");
+                }
+            });
+        });
+    </script>
+}

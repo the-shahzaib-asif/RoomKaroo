@@ -5,27 +5,25 @@
 <div class="container mt-5" style="max-width: 420px;">
     <div class="riq-box p-4">
         <h3 class="fw-bold mb-1">Welcome back</h3>
-        <p class="text-secondary small mb-4">Sign in to your RoomIQ account.</p>
+        <p class="text-secondary small mb-4">Sign in with your RoomKaroo Identity account.</p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger py-2 small">@ViewBag.Error</div>
+        }
 
         <form method="post" asp-controller="Account" asp-action="Login">
             <div class="mb-3">
                 <label class="riq-label">Email Address</label>
-                <input type="email" name="email" class="riq-input" placeholder="you@example.com" required />
-            </div>
-            <div class="mb-3">
-                <label class="riq-label">Password</label>
-                <input type="password" name="password" class="riq-input" placeholder="••••••••" required />
+                <input type="email" name="email" class="riq-input" required />
             </div>
             <div class="mb-4">
-                <label class="riq-label">Login As</label>
-                <select name="role" class="riq-input">
-                    <option value="Finder">Student (Finder)</option>
-                    <option value="Lister">Hostel Owner (Lister)</option>
-                </select>
+                <label class="riq-label">Password</label>
+                <input type="password" name="password" class="riq-input" required />
             </div>
-            <button type="submit" class="btn-dark-riq w-100 mb-3">Login</button>
+            <button type="submit" class="btn-dark-riq w-100 mb-3">Sign In</button>
             <div class="text-center small text-secondary">
-                New to RoomIQ? <a asp-action="Signup">Create an account</a>
+                New here? <a asp-action="Signup">Create an account</a>
             </div>
         </form>
     </div>

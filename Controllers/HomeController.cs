@@ -1,61 +1,117 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoomIQ.Models;
-using System;
+using RoomIQ.Repositories.Interfaces;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RoomIQ.Controllers
 {
     public class HomeController : Controller
     {
-        // 1. index.html -> Dynamic Landing Page
-        public IActionResult Index()
+        private readonly IHostelRepository _hostelRepo;
+        private readonly IRoommateRepository _roommateRepo;
+        private readonly ISavedHostelRepository _savedRepo;
+        private readonly IInquiryRepository _inquiryRepo;
+
+        public HomeController(
+            IHostelRepository hostelRepo,
+            IRoommateRepository roommateRepo,
+            ISavedHostelRepository savedRepo,
+            IInquiryRepository inquiryRepo)
         {
-            var featuredHostels = HostelData.Hostels.Take(3).ToList();
-            return View(featuredHostels);
+            _hostelRepo = hostelRepo;
+            _roommateRepo = roommateRepo;
+            _savedRepo = savedRepo;
+            _inquiryRepo = inquiryRepo;
         }
 
-        // 2. finder-home.html -> Dynamic Student Search Page
-        public IActionResult FinderHome(string area, string gender, int? maxPrice)
+        // 1. Index Page
+        public async Task<IActionResult> Index()
         {
-            var list = HostelData.Hostels.AsQueryable();
-
-            if (!string.IsNullOrEmpty(area) && area != "All")
-                list = list.Where(h => h.Area.Equals(area, StringComparison.OrdinalIgnoreCase));
-
-            if (!string.IsNullOrEmpty(gender) && gender != "All")
-                list = list.Where(h => h.Gender.Equals(gender, StringComparison.OrdinalIgnoreCase));
-
-            if (maxPrice.HasValue && maxPrice.Value > 0)
-                list = list.Where(h => h.Price <= maxPrice.Value);
-
-            ViewBag.SelectedArea = area ?? "All";
-            ViewBag.SelectedGender = gender ?? "All";
-            ViewBag.MaxPrice = maxPrice;
-
-            return View(list.ToList());
+            var hostels = (await _hostelRepo.GetAllAsync()).Take(3).ToList();
+            return View(hostels);
         }
 
-        // 3. lister-dashboard.html -> Dynamic Owner Dashboard
+        // 2. Finder Home Page
+        public async Task<IActionResult> FinderHome()
+        {
+            var hostels = await _hostelRepo.GetAllAsync();
+            var userEmail = User.Identity?.IsAuthenticated == true ? User.Identity.Name! : "guest@roomiq.pk";
+            ViewBag.SavedIds = (await _savedRepo.GetSavedIdsByUserAsync(userEmail)).ToList();
+            return View(hostels.ToList());
+        }
+
+        // AJAX ($.get): Live Filter Hostels without page reload
         [HttpGet]
-        public IActionResult ListerDashboard()
+        public async Task<IActionResult> FilterHostelsAjax(string? area, string? gender, int? maxPrice)
         {
-            return View(HostelData.Hostels);
+            var hostels = await _hostelRepo.FilterAsync(area, gender, maxPrice);
+            return Json(hostels);
         }
 
-        // Owner Dashboard se naya hostel dynamically add karne ke liye
+        // AJAX ($.post): Save / Unsave Hostel Bookmark
         [HttpPost]
-        public IActionResult AddHostel(Hostel hostel)
+        public async Task<IActionResult> ToggleSaveAjax(int hostelId)
         {
-            HostelData.Add(hostel);
-            return RedirectToAction("ListerDashboard");
+            var userEmail = User.Identity?.IsAuthenticated == true ? User.Identity.Name! : "guest@roomiq.pk";
+            var isSaved = await _savedRepo.ToggleSaveAsync(userEmail, hostelId);
+            return Json(new { saved = isSaved });
         }
 
-        // Owner Dashboard se hostel delete karne ke liye
+        // AJAX ($.ajax): Send Quick Inquiry to Hostel Owner
         [HttpPost]
-        public IActionResult DeleteHostel(int id)
+        public async Task<IActionResult> SendInquiryAjax([FromBody] Inquiry inquiry)
         {
-            HostelData.Delete(id);
-            return RedirectToAction("ListerDashboard");
+            if (string.IsNullOrWhiteSpace(inquiry.StudentName) || string.IsNullOrWhiteSpace(inquiry.Phone))
+                return BadRequest(new { message = "Name and phone are required." });
+
+            await _inquiryRepo.AddAsync(inquiry);
+            return Json(new { success = true, message = "Inquiry sent to hostel owner." });
+        }
+
+        // 3. Lister Dashboard (Protected by ASP.NET Identity)
+        [Authorize]
+        public async Task<IActionResult> ListerDashboard()
+        {
+            ViewBag.Inquiries = (await _inquiryRepo.GetAllAsync()).ToList();
+            var hostels = await _hostelRepo.GetAllAsync();
+            return View(hostels.ToList());
+        }
+
+        // AJAX ($.ajax): Add New Hostel dynamically
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddHostelAjax([FromBody] Hostel hostel)
+        {
+            var newId = await _hostelRepo.AddAsync(hostel);
+            hostel.Id = newId;
+            return Json(new { success = true, data = hostel });
+        }
+
+        // AJAX ($.ajax): Delete Hostel dynamically
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DeleteHostelAjax(int id)
+        {
+            var deleted = await _hostelRepo.DeleteAsync(id);
+            return Json(new { success = deleted });
+        }
+
+        // 4. Roommates Page
+        public async Task<IActionResult> Roommates()
+        {
+            var posts = await _roommateRepo.GetAllAsync();
+            return View(posts.ToList());
+        }
+
+        // AJAX ($.post): Add Roommate Ad without reload
+        [HttpPost]
+        public async Task<IActionResult> AddRoommateAjax(RoommatePost post)
+        {
+            var newId = await _roommateRepo.AddAsync(post);
+            post.Id = newId;
+            return Json(new { success = true, data = post });
         }
     }
 }

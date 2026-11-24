@@ -1,94 +1,89 @@
 ﻿@model List<RoomIQ.Models.Hostel>
 @{
     ViewData["Title"] = "Lister Dashboard";
+    var inquiries = ViewBag.Inquiries as List<RoomIQ.Models.Inquiry> ?? new List<RoomIQ.Models.Inquiry>();
 }
 
 <div class="container mt-5">
     <div class="mb-4">
-        <h2 class="fw-bold mb-1">Lister Dashboard — Hostel Owner Panel</h2>
-        <p class="text-secondary small mb-0">Add a new hostel listing or manage your existing properties below.</p>
+        <h2 class="fw-bold mb-1">Hostel Owner Dashboard</h2>
+        <p class="text-secondary small mb-0">Add or remove listings dynamically using AJAX and view student inquiries.</p>
     </div>
 
     <div class="row g-4">
-        <!-- Left Column: Add Hostel Form -->
+        <!-- Add Hostel via $.ajax -->
         <div class="col-lg-4">
             <div class="riq-box">
                 <h5 class="fw-bold mb-3">Add New Hostel</h5>
-                <form method="post" asp-controller="Home" asp-action="AddHostel">
+                <form id="addHostelForm">
                     <div class="mb-3">
                         <label class="riq-label">Hostel Name</label>
-                        <input name="Name" class="riq-input" placeholder="e.g. City Boys Hostel" required />
+                        <input id="hName" class="riq-input" required />
                     </div>
                     <div class="row g-2 mb-3">
                         <div class="col-6">
                             <label class="riq-label">Area</label>
-                            <select name="Area" class="riq-input">
-                                <option value="Johar Town">Johar Town</option>
-                                <option value="Model Town">Model Town</option>
-                                <option value="Anarkali">Anarkali</option>
-                                <option value="Gulberg">Gulberg</option>
+                            <select id="hArea" class="riq-input">
+                                <option>Johar Town</option>
+                                <option>Model Town</option>
+                                <option>Anarkali</option>
+                                <option>Gulberg</option>
                             </select>
                         </div>
                         <div class="col-6">
                             <label class="riq-label">Gender</label>
-                            <select name="Gender" class="riq-input">
-                                <option value="Boys">Boys</option>
-                                <option value="Girls">Girls</option>
+                            <select id="hGender" class="riq-input">
+                                <option>Boys</option>
+                                <option>Girls</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="riq-label">Monthly Rent (PKR)</label>
-                        <input name="Price" type="number" class="riq-input" placeholder="18000" required />
+                        <input id="hPrice" type="number" class="riq-input" required />
                     </div>
                     <div class="mb-3">
                         <label class="riq-label">Facilities</label>
-                        <input name="Facilities" class="riq-input" placeholder="WiFi, Mess, AC, Laundry" required />
+                        <input id="hFacilities" class="riq-input" placeholder="WiFi, Mess, AC" required />
                     </div>
                     <div class="mb-3">
                         <label class="riq-label">Owner Name</label>
-                        <input name="OwnerName" class="riq-input" placeholder="Your Full Name" required />
+                        <input id="hOwner" class="riq-input" required />
                     </div>
                     <div class="mb-3">
-                        <label class="riq-label">WhatsApp Number (92...)</label>
-                        <input name="WhatsApp" class="riq-input" placeholder="923001234567" required />
+                        <label class="riq-label">WhatsApp (92...)</label>
+                        <input id="hWhatsApp" class="riq-input" placeholder="923001234567" required />
                     </div>
                     <button type="submit" class="btn-dark-riq w-100">Publish Listing</button>
                 </form>
             </div>
         </div>
 
-        <!-- Right Column: Dynamic Listings Table -->
+        <!-- Listings Table & Student Inquiries -->
         <div class="col-lg-8">
-            <div class="riq-box p-0 overflow-hidden">
-                <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                    <span class="fw-semibold">Active Listings (@Model.Count)</span>
-                </div>
+            <div class="riq-box p-0 overflow-hidden mb-4">
+                <div class="p-3 border-bottom fw-semibold">Active Hostels</div>
                 <div class="table-responsive">
                     <table class="table mb-0 align-middle">
                         <thead class="small text-secondary bg-light">
                             <tr>
-                                <th class="ps-3">Hostel Name</th>
+                                <th class="ps-3">Hostel</th>
                                 <th>Area</th>
                                 <th>Gender</th>
                                 <th>Rent</th>
-                                <th>WhatsApp</th>
                                 <th class="text-end pe-3">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="hostelTableBody">
                             @foreach (var item in Model)
                             {
-                                <tr>
+                                <tr id="row-@item.Id">
                                     <td class="ps-3 fw-medium">@item.Name</td>
                                     <td>@item.Area</td>
                                     <td><span class="riq-tag">@item.Gender</span></td>
                                     <td>Rs. @item.Price.ToString("N0")</td>
-                                    <td class="small text-secondary">+@item.WhatsApp</td>
                                     <td class="text-end pe-3">
-                                        <form method="post" asp-controller="Home" asp-action="DeleteHostel" asp-route-id="@item.Id" class="d-inline">
-                                            <button type="submit" class="btn-outline-riq py-1 px-2 small text-danger">Delete</button>
-                                        </form>
+                                        <button type="button" class="btn-outline-riq py-1 px-2 small text-danger btn-delete" data-id="@item.Id">Delete</button>
                                     </td>
                                 </tr>
                             }
@@ -96,3 +91,88 @@
                     </table>
                 </div>
             </div>
+
+            <div class="riq-box p-0 overflow-hidden">
+                <div class="p-3 border-bottom fw-semibold">Recent Student Inquiries (@inquiries.Count)</div>
+                <div class="table-responsive">
+                    <table class="table mb-0 align-middle small">
+                        <thead class="text-secondary bg-light">
+                            <tr>
+                                <th class="ps-3">Student</th>
+                                <th>Hostel</th>
+                                <th>Phone</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var inq in inquiries)
+                            {
+                                <tr>
+                                    <td class="ps-3 fw-medium">@inq.StudentName</td>
+                                    <td>@inq.HostelName</td>
+                                    <td>@inq.Phone</td>
+                                    <td>@inq.Message</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // $.ajax() — Add Hostel without reload
+        $("#addHostelForm").submit(function (e) {
+            e.preventDefault();
+            var hostel = {
+                name: $("#hName").val(),
+                area: $("#hArea").val(),
+                gender: $("#hGender").val(),
+                price: parseInt($("#hPrice").val()),
+                facilities: $("#hFacilities").val(),
+                ownerName: $("#hOwner").val(),
+                whatsApp: $("#hWhatsApp").val()
+            };
+
+            $.ajax({
+                url: "/Home/AddHostelAjax",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(hostel),
+                success: function (res) {
+                    var item = res.data;
+                    var newRow = `<tr id="row-${item.id}">
+                        <td class="ps-3 fw-medium">${item.name}</td>
+                        <td>${item.area}</td>
+                        <td><span class="riq-tag">${item.gender}</span></td>
+                        <td>Rs. ${item.price.toLocaleString()}</td>
+                        <td class="text-end pe-3">
+                            <button type="button" class="btn-outline-riq py-1 px-2 small text-danger btn-delete" data-id="${item.id}">Delete</button>
+                        </td>
+                    </tr>`;
+                    $("#hostelTableBody").prepend(newRow);
+                    $("#addHostelForm")[0].reset();
+                }
+            });
+        });
+
+        // $.ajax() — Delete Hostel without reload
+        $(document).on("click", ".btn-delete", function () {
+            var id = $(this).data("id");
+            if (!confirm("Delete this hostel?")) return;
+
+            $.ajax({
+                url: "/Home/DeleteHostelAjax?id=" + id,
+                type: "POST",
+                success: function (res) {
+                    if (res.success) {
+                        $("#row-" + id).fadeOut(200, function () { $(this).remove(); });
+                    }
+                }
+            });
+        });
+    </script>
+}

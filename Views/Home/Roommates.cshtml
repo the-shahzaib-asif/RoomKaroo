@@ -1,0 +1,110 @@
+﻿@model List<RoomIQ.Models.RoommatePost>
+@{
+    ViewData["Title"] = "Roommates";
+}
+
+<div class="container mt-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <h2 class="fw-bold mb-1">Roommate Finder</h2>
+            <p class="text-secondary small mb-4">Split rent with fellow university students in Lahore.</p>
+
+            <div id="roommateList" class="d-flex flex-column gap-3">
+                @foreach (var p in Model)
+                {
+                    <div class="riq-box">
+                        <div class="d-flex justify-content-between mb-1">
+                            <div>
+                                <h5 class="fw-bold mb-0">@p.StudentName</h5>
+                                <span class="small text-secondary">@p.University • @p.Area</span>
+                            </div>
+                            <span class="riq-tag">@p.Gender</span>
+                        </div>
+                        <p class="small my-2">@p.Preferences</p>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <span class="small fw-semibold">Budget: Rs. @p.Budget.ToString("N0")/mo</span>
+                            <a href="https://wa.me/@p.WhatsApp" target="_blank" class="btn-wa-riq py-1 px-3">WhatsApp</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="riq-box">
+                <h5 class="fw-bold mb-3">Post Roommate Ad</h5>
+                <form id="roommateForm">
+                    <div class="mb-2">
+                        <label class="riq-label">Your Name</label>
+                        <input name="StudentName" class="riq-input" required />
+                    </div>
+                    <div class="mb-2">
+                        <label class="riq-label">University</label>
+                        <input name="University" class="riq-input" placeholder="PUCIT" required />
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col-6">
+                            <label class="riq-label">Area</label>
+                            <select name="Area" class="riq-input">
+                                <option>Johar Town</option>
+                                <option>Model Town</option>
+                                <option>Anarkali</option>
+                                <option>Gulberg</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="riq-label">Gender</label>
+                            <select name="Gender" class="riq-input">
+                                <option>Boys</option>
+                                <option>Girls</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="riq-label">Budget (PKR)</label>
+                        <input name="Budget" type="number" class="riq-input" required />
+                    </div>
+                    <div class="mb-2">
+                        <label class="riq-label">WhatsApp (92...)</label>
+                        <input name="WhatsApp" class="riq-input" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="riq-label">Preferences</label>
+                        <textarea name="Preferences" rows="2" class="riq-input" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-dark-riq w-100">Publish Post</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // $.post() — Add Roommate Post dynamically
+        $("#roommateForm").submit(function (e) {
+            e.preventDefault();
+            $.post("/Home/AddRoommateAjax", $(this).serialize(), function (res) {
+                if (res.success) {
+                    var p = res.data;
+                    var card = `<div class="riq-box">
+                        <div class="d-flex justify-content-between mb-1">
+                            <div>
+                                <h5 class="fw-bold mb-0">${p.studentName}</h5>
+                                <span class="small text-secondary">${p.university} • ${p.area}</span>
+                            </div>
+                            <span class="riq-tag">${p.gender}</span>
+                        </div>
+                        <p class="small my-2">${p.preferences}</p>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <span class="small fw-semibold">Budget: Rs. ${p.budget.toLocaleString()}/mo</span>
+                            <a href="https://wa.me/${p.whatsApp}" target="_blank" class="btn-wa-riq py-1 px-3">WhatsApp</a>
+                        </div>
+                    </div>`;
+                    $("#roommateList").prepend(card);
+                    $("#roommateForm")[0].reset();
+                }
+            });
+        });
+    </script>
+}

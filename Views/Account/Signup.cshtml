@@ -4,32 +4,41 @@
 
 <div class="container mt-5" style="max-width: 440px;">
     <div class="riq-box p-4">
-        <h3 class="fw-bold mb-1">Create an account</h3>
-        <p class="text-secondary small mb-4">Join RoomIQ as a Student Finder or Hostel Lister.</p>
+        <h3 class="fw-bold mb-1">Create Account</h3>
+        <p class="text-secondary small mb-4">Customized ASP.NET Identity Registration.</p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger py-2 small">@ViewBag.Error</div>
+        }
 
         <form method="post" asp-controller="Account" asp-action="Signup">
             <div class="mb-3">
                 <label class="riq-label">Full Name</label>
-                <input type="text" name="fullName" class="riq-input" placeholder="Shahzaib Asif" required />
+                <input type="text" name="fullName" class="riq-input" required />
             </div>
             <div class="mb-3">
                 <label class="riq-label">Email Address</label>
-                <input type="email" name="email" class="riq-input" placeholder="you@example.com" required />
+                <input type="email" name="email" class="riq-input" required />
             </div>
             <div class="mb-3">
-                <label class="riq-label">Password</label>
-                <input type="password" name="password" class="riq-input" placeholder="Create a password" required />
+                <label class="riq-label">WhatsApp Number</label>
+                <input type="text" name="whatsAppNumber" class="riq-input" placeholder="923001234567" required />
+            </div>
+            <div class="mb-3">
+                <label class="riq-label">Password (Min 6 chars)</label>
+                <input type="password" name="password" class="riq-input" required />
             </div>
             <div class="mb-4">
-                <label class="riq-label">Account Type</label>
-                <select name="role" class="riq-input">
+                <label class="riq-label">Account Role</label>
+                <select name="userRole" class="riq-input">
                     <option value="Finder">Student (Finder)</option>
                     <option value="Lister">Hostel Owner (Lister)</option>
                 </select>
             </div>
-            <button type="submit" class="btn-dark-riq w-100 mb-3">Sign Up</button>
+            <button type="submit" class="btn-dark-riq w-100 mb-3">Register</button>
             <div class="text-center small text-secondary">
-                Already have an account? <a asp-action="Login">Login</a>
+                Already registered? <a asp-action="Login">Sign In</a>
             </div>
         </form>
     </div>

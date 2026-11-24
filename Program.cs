@@ -1,45 +1,57 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RoomIQ.Data;
+using RoomIQ.Models;
+using RoomIQ.Repositories;
+using RoomIQ.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+// 1. Database Context for Customized Identity
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// 2. Customized ASP.NET Core Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+});
+
+// 3. Dependency Injection (D.I) for 4 Dapper Repositories
+builder.Services.AddScoped<IHostelRepository, HostelRepository>();
+builder.Services.AddScoped<IRoommateRepository, RoommateRepository>();
+builder.Services.AddScoped<ISavedHostelRepository, SavedHostelRepository>();
+builder.Services.AddScoped<IInquiryRepository, InquiryRepository>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
-}
-else
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Home/Index");
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication(); // Identity Authentication
 app.UseAuthorization();
-
-app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapRazorPages()
-   .WithStaticAssets();
 
 app.Run();

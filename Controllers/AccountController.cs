@@ -1,62 +1,73 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using RoomIQ.Models;
+using System.Threading.Tasks;
 
 namespace RoomIQ.Controllers
 {
     public class AccountController : Controller
     {
-        // 4. login.html -> Identity/Auth Login
-        [HttpGet]
-        public IActionResult Login()
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
-            return View();
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        [HttpPost]
-        public IActionResult Login(string email, string password, string role)
-        {
-            if (!string.IsNullOrWhiteSpace(email))
-            {
-                Response.Cookies.Append("UserEmail", email);
-                Response.Cookies.Append("UserRole", role ?? "Finder");
+        [HttpGet]
+        public IActionResult Login() => View();
 
-                if (role == "Lister")
+        [HttpPost]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            var result = await _signInManager.PasswordSignInAsync(email, password, isPersistent: true, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user?.UserRole == "Lister")
                     return RedirectToAction("ListerDashboard", "Home");
 
                 return RedirectToAction("FinderHome", "Home");
             }
 
-            ViewBag.Error = "Invalid login details.";
+            ViewBag.Error = "Invalid email or password.";
             return View();
         }
 
-        // 5. signup.html -> Identity/Auth Signup
         [HttpGet]
-        public IActionResult Signup()
-        {
-            return View();
-        }
+        public IActionResult Signup() => View();
 
         [HttpPost]
-        public IActionResult Signup(string fullName, string email, string password, string role)
+        public async Task<IActionResult> Signup(string fullName, string email, string password, string userRole, string whatsAppNumber)
         {
-            if (!string.IsNullOrWhiteSpace(email))
+            var user = new ApplicationUser
             {
-                Response.Cookies.Append("UserEmail", fullName ?? email);
-                Response.Cookies.Append("UserRole", role ?? "Finder");
+                UserName = email,
+                Email = email,
+                FullName = fullName,
+                UserRole = userRole ?? "Finder",
+                WhatsAppNumber = whatsAppNumber ?? string.Empty
+            };
 
-                if (role == "Lister")
+            var result = await _userManager.CreateAsync(user, password);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: true);
+                if (user.UserRole == "Lister")
                     return RedirectToAction("ListerDashboard", "Home");
 
                 return RedirectToAction("FinderHome", "Home");
             }
 
+            ViewBag.Error = string.Join(" ", result.Errors.Select(e => e.Description));
             return View();
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            Response.Cookies.Delete("UserEmail");
-            Response.Cookies.Delete("UserRole");
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
     }
